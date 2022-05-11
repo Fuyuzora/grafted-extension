@@ -1,0 +1,75 @@
+body {
+    min-width: 500px;
+    margin: 0 0 0 0;
+}
+
+div.topbar {
+    position: fixed;
+    display: table;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 80px;
+    background-color: white;
+}
+
+div.topbar-content {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 30px;
+    font-size: 30;
+    font-weight: bold;
+    border-bottom: 0.5px solid lightgrey;
+}
+
+div.main-content {
+    margin-top: 95px;
+}
+
+div.section-wrapper {
+    margin: 20px 0px 20px 0px;
+}
+
+div.header {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 22;
+    font-weight: 500;
+    margin: 0px 30px 0px 30px;
+}
+
+div.card {
+    margin: 10px 0px 10px 0px;
+    padding: 3px 0px 5px 0px;
+}
+
+div.card:hover {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+div.content-header {
+    font-size: 22;
+    font-weight: 500;
+    display: flex;
+    margin: 10px 30px 10px 30px;
+}
+
+div.content-subheader {
+    font-size: 14;
+    font-weight: normal;
+    color:grey;
+    align-self: center;
+    padding-left: 20px;
+}
+
+div.content-item {
+    border-left: 1px solid black;
+    padding-left: 5%;
+    margin: 20px 30px 20px 30px;
+    line-height: 1.6;
+    font-size: 16;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
