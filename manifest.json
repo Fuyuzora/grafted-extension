@@ -20,6 +20,12 @@
             "128": "/images/grafted128.png"
         }
     },
+    "content_scripts": [
+        {
+          "matches": ["https://*.medium.com/@*"],
+          "js": ["scrapers/medium-scraper.js"]
+        }
+      ],
     "icons": {
         "16": "/images/grafted16.png",
         "32": "/images/grafted32.png",
@@ -28,7 +34,6 @@
     },
     "options_page": "options/options.html",
     "minimum_chrome_version": "10.0",
-    "devtools_page": "devtools/devtools.html",
     "host_permissions": [
         "<all_urls>"
     ],

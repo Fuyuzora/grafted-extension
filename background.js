@@ -1,5 +1,5 @@
 let selectedTypes = ["keywords", "summary", "kg"]
 
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.sync.set({selectedTypes});
-});
+    chrome.storage.sync.set({ selectedTypes })
+})
