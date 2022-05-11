@@ -28,5 +28,18 @@
     },
     "options_page": "options/options.html",
     "minimum_chrome_version": "10.0",
-    "devtools_page": "devtools/devtools.html"
+    "devtools_page": "devtools/devtools.html",
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "popup/mock_resp.json"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
 }
