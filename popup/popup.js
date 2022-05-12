@@ -14,15 +14,15 @@ let createDiv = (className, loader) => {
 
 let generateKeywordsSection = (data) => {
     sectionWrapper = createDiv("section-wrapper", false)
-    header = createDiv("header", true)
+    header = createDiv("header", false)
     header.innerHTML = "Keywords"
     sectionWrapper.appendChild(header)
     for (let ind in data) {
         item = data[ind]
         let card = createDiv('card', false)
-        let contentHeader = createDiv("content-header", true)
-        let contentSubheader = createDiv("content-subheader", true)
-        let contentItem = createDiv("content-item", true)
+        let contentHeader = createDiv("content-header", false)
+        let contentSubheader = createDiv("content-subheader", false)
+        let contentItem = createDiv("content-item", false)
         contentHeader.innerHTML = item.header
         contentSubheader.innerHTML = item.subheader
         contentItem.innerHTML = item.content
@@ -42,7 +42,7 @@ let generateSummarySection = (data) => {
     for (let ind in data) {
         item = data[ind]
         let card = createDiv('card', false)
-        let contentItem = createDiv("content-item", true)
+        let contentItem = createDiv("content-item", false)
         contentItem.innerHTML = item
         card.appendChild(contentItem)
         sectionWrapper.appendChild(card)
@@ -92,15 +92,15 @@ let removeSkeletonLoader = () => {
 let getRespFromContent = async (id) => {
     return new Promise((resolve, reject) => {
         try {
+            chrome.storage.sync.get((id).toString(), data => {
+                resolve(data[id])
+            }) 
+        } catch (e) {
             chrome.runtime.onMessage.addListener((request) => {
-                console.log(request)
                 if (request[id] !== undefined) {
-                    console.log(request[id])
                     resolve(request[id])
                 }
             })
-        } catch (e) {
-            reject(e)
         }
     })
 }

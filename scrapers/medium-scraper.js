@@ -17,7 +17,10 @@ let getCurrentTabId = () => {
     )
 }
 
-let postToPopup = (id, body) => chrome.runtime.sendMessage({[id]: body})
+let postToPopup = ((id, body) => {
+    chrome.runtime.sendMessage({ [id]: body })
+    chrome.storage.sync.set({ [id]: body })
+})
 
 let fetchAndStoreContent = async () => {
     // TODO: change this to correct url
@@ -25,7 +28,7 @@ let fetchAndStoreContent = async () => {
     let id = await getCurrentTabId()
     setTimeout(() => {
         postToPopup(id, resp)
-    }, 3000);
+    }, 3000)
 }
 
 fetchAndStoreContent()

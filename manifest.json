@@ -23,7 +23,7 @@
     },
     "content_scripts": [
         {
-          "matches": ["https://*.medium.com/@*"],
+          "matches": ["https://medium.com/*/*", "https://*.medium.com/*"],
           "js": ["scrapers/medium-scraper.js"]
         }
       ],
