@@ -1,6 +1,6 @@
 // post text
 // TODO: post text to backend and fetch content
-url = chrome.runtime.getURL('popup/mock_resp.json')
+dummy = chrome.runtime.getURL('popup/mock_resp.json')
 
 // display content
 let createDiv = (className, loader) => {
@@ -12,10 +12,10 @@ let createDiv = (className, loader) => {
     return div
 }
 
-let generateKeywordsSection = (data, type) => {
+let generateKeywordsSection = (data) => {
     sectionWrapper = createDiv("section-wrapper", false)
     header = createDiv("header", true)
-    header.innerHTML = type
+    header.innerHTML = "Keywords"
     sectionWrapper.appendChild(header)
     for (let ind in data) {
         item = data[ind]
@@ -34,11 +34,30 @@ let generateKeywordsSection = (data, type) => {
     return sectionWrapper
 }
 
+let generateSummarySection = (data) => {
+    sectionWrapper = createDiv("section-wrapper", false)
+    header = createDiv("header", false)
+    header.innerHTML = "Summary"
+    sectionWrapper.appendChild(header)
+    for (let ind in data) {
+        item = data[ind]
+        let card = createDiv('card', false)
+        let contentItem = createDiv("content-item", true)
+        contentItem.innerHTML = item
+        card.appendChild(contentItem)
+        sectionWrapper.appendChild(card)
+    }
+    return sectionWrapper
+}
+
 let generatePage = (resp) => {
     let mainContent = document.getElementsByClassName("main-content")[0]
     for (let type in resp) {
         if (type === 'keywords') {
-            let section = generateKeywordsSection(resp[type], type)
+            let section = generateKeywordsSection(resp[type])
+            mainContent.appendChild(section)
+        } else if (type === "summary") {
+            let section = generateSummarySection(resp[type], type)
             mainContent.appendChild(section)
         }
     }
@@ -70,13 +89,29 @@ let removeSkeletonLoader = () => {
     mainContent.removeChild(placeholder)
 }
 
-fetch(url).then(resp => resp.json()).then(resp => {generateSkeletionLoader(resp)})
+let getRespFromContent = async (id) => {
+    return new Promise((resolve, reject) => {
+        try {
+            chrome.runtime.onMessage.addListener((request) => {
+                console.log(request)
+                if (request[id] !== undefined) {
+                    console.log(request[id])
+                    resolve(request[id])
+                }
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
-// changeColor.addEventListener("click", async () => {
-//     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+loadPopup = async () => {
+    let dummyData = await fetch(dummy).then(resp => resp.json())
+    generateSkeletionLoader(dummyData)
+    let tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+    let resp = await getRespFromContent(tabs[0].id)
+    removeSkeletonLoader()
+    generatePage(resp)
+}
 
-//     chrome.scripting.executeScript({
-//         target: { tabId: tab.id },
-//         function: setPageBackgroundColor,
-//     })
-// })
+loadPopup()
