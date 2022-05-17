@@ -1,4 +1,5 @@
 let selectedTypes = ["keywords", "summary", "kg"]
+supportedDomains = [/https:\/\/medium.com\/.+\/.+/, /https:\/\/.+medium.com\/.+/]
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.set({ selectedTypes })
@@ -13,8 +14,9 @@ chrome.runtime.onMessage.addListener(
     }
 )
 
-let setUpBadge = (on) => {
-    if (on) {
+let setUpBadge = (url) => {
+    const matched = supportedDomains.some(rx => rx.test(url))
+    if (matched) {
         chrome.action.setBadgeBackgroundColor({ color: "#0096FF" })
         chrome.action.setBadgeText({ text: 'ON' })
     } else {
@@ -22,26 +24,20 @@ let setUpBadge = (on) => {
     }
 }
 
-// chrome.tabs.onActivated.addListener((activeInfo) => {
-//     chrome.tabs.get(activeInfo.tabId, (activeTab) => {
-//         regexList = [/https:\/\/medium.com\/.+\/.+/, /https:\/\/.+medium.com\/.+/]
-//         const matched = regexList.some(rx => rx.test(activeTab.url))
-//         setUpBadge(matched)
-//     })
-// })
+// TODO: add towardsdatascience and other medium franchise
 
 chrome.tabs.onUpdated.addListener(
     (tabId, changeInfo, tab) => {
         if (changeInfo.url) {
-            regexList = [/https:\/\/medium.com\/.+\/.+/, /https:\/\/.+medium.com\/.+/]
-            const matched = regexList.some(rx => rx.test(changeInfo.url))
-            console.log("changeinfo")
-            setUpBadge(matched)
+            setUpBadge(changeInfo.url)
         } else if (tab.pendingUrl) {
-            regexList = [/https:\/\/medium.com\/.+\/.+/, /https:\/\/.+medium.com\/.+/]
-            const matched = regexList.some(rx => rx.test(tab.pendingUrl))
-            console.log("pending")
-            setUpBadge(matched)
+            setUpBadge(tab.pendingUrl)
         }
     }
 )
+
+chrome.tabs.onActivated.addListener(activeInfo => {
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
+        setUpBadge(tabs[0].url)
+    })
+})
