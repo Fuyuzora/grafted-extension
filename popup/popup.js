@@ -1,8 +1,4 @@
-// post text
-// TODO: post text to backend and fetch content
 dummy = chrome.runtime.getURL('popup/mock_resp.json')
-
-// display content
 let createDiv = (className, loader) => {
     div = document.createElement('div')
     div.classList.add(className)
@@ -109,7 +105,11 @@ loadPopup = async () => {
     let dummyData = await fetch(dummy).then(resp => resp.json())
     generateSkeletionLoader(dummyData)
     let tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+    console.log('====== tab id =====')
+    console.log(tabs[0].id)
     let resp = await getRespFromContent(tabs[0].id)
+    console.log('===== data =====')
+    console.log(resp)
     removeSkeletonLoader()
     generatePage(resp)
 }
