@@ -8,8 +8,9 @@ let createDiv = (className, loader) => {
 }
 
 let posTags = {
-    'NN': 'common noun, singular or mass',
-    'NNP': 'proper noun, singular'
+    'NN': 'Common noun, singular or mass',
+    'NNP': 'Proper noun, singular',
+    'JJ': 'Adjective'
 }
 
 Object.defineProperty(String.prototype, 'capitalize', {
@@ -96,8 +97,8 @@ loadPopup = () => {
     generateSkeletionLoader()
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         let id = (tabs[0].id).toString()
-        chrome.storage.sync.get(id, stored_doc => {
-            chrome.storage.sync.get("selectedTypes", stored_types => {
+        chrome.storage.local.get(id, stored_doc => {
+            chrome.storage.local.get("selectedTypes", stored_types => {
                 fetch(url = "https://3638itzwsl.execute-api.us-east-1.amazonaws.com/dev",
                     {
                         method: 'POST',

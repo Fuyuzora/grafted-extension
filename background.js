@@ -1,9 +1,9 @@
 let selectedTypes = ["keywords", "summary", "kg"]
-supportedDomains = [/https:\/\/medium.com\/.+\/.+/, /https:\/\/.+medium.com\/.+/]
+supportedDomains = [/https:\/\/medium.com\/.+\/.+/, /https:\/\/.+medium.com\/.+/, /https:\/\/towardsdatascience.com\/.+/]
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.clear();
-    chrome.storage.sync.set({ selectedTypes })
+    chrome.storage.local.set({ selectedTypes })
 })
 
 chrome.runtime.onMessage.addListener(
@@ -24,8 +24,6 @@ let setUpBadge = (url) => {
         chrome.action.setBadgeText({ text: '' })
     }
 }
-
-// TODO: add towardsdatascience and other medium franchise
 
 chrome.tabs.onUpdated.addListener(
     (tabId, changeInfo, tab) => {

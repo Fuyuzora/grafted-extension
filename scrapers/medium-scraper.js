@@ -1,14 +1,6 @@
-let getCurrentTabId = () => {
-    return new Promise(
-        resolve => {
-            
-        }
-    )
+let postToPopup = body => {
+    chrome.runtime.sendMessage('current_tab_id', id =>  chrome.storage.local.set({ [id]: body }))
 }
-
-let postToPopup = (body => {
-    chrome.runtime.sendMessage('current_tab_id', id => chrome.storage.sync.set({ [id]: body }))
-})
 
 let manualScrape = () => {
     headers = [...document.querySelectorAll("h1, h2, h3, h4, h5, h6")]

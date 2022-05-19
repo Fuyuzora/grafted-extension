@@ -8,8 +8,8 @@
     },
     "permissions": [
         "storage",
+        "unlimitedStorage",
         "scripting",
-        "activeTab",
         "tabs"
     ],
     "action": {
@@ -23,7 +23,7 @@
     },
     "content_scripts": [
         {
-          "matches": ["https://medium.com/*/*", "https://*.medium.com/*"],
+          "matches": ["https://medium.com/*/*", "https://*.medium.com/*", "https://towardsdatascience.com/*"],
           "js": ["scrapers/medium-scraper.js"]
         }
       ],
