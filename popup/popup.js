@@ -1,4 +1,3 @@
-dummy = chrome.runtime.getURL('popup/mock_resp.json')
 let createDiv = (className, loader) => {
     div = document.createElement('div')
     div.classList.add(className)
@@ -7,6 +6,18 @@ let createDiv = (className, loader) => {
     }
     return div
 }
+
+let posTags = {
+    'NN': 'common noun, singular or mass',
+    'NNP': 'proper noun, singular'
+}
+
+Object.defineProperty(String.prototype, 'capitalize', {
+    value: function () {
+        return this.charAt(0).toUpperCase() + this.slice(1)
+    },
+    enumerable: false
+})
 
 let generateKeywordsSection = (data) => {
     sectionWrapper = createDiv("section-wrapper", false)
@@ -19,8 +30,8 @@ let generateKeywordsSection = (data) => {
         let contentHeader = createDiv("content-header", false)
         let contentSubheader = createDiv("content-subheader", false)
         let contentItem = createDiv("content-item", false)
-        contentHeader.innerHTML = item.header
-        contentSubheader.innerHTML = item.subheader
+        contentHeader.innerHTML = item.header.capitalize()
+        contentSubheader.innerHTML = posTags[item.subheader]
         contentItem.innerHTML = item.content
         contentHeader.appendChild(contentSubheader)
         card.appendChild(contentHeader)
@@ -53,19 +64,17 @@ let generatePage = (resp) => {
             let section = generateKeywordsSection(resp[type])
             mainContent.appendChild(section)
         } else if (type === "summary") {
-            let section = generateSummarySection(resp[type], type)
+            let section = generateSummarySection(resp[type])
             mainContent.appendChild(section)
         }
     }
 }
 
-let generateSkeletionLoader = (data) => {
-    data = data["keywords"]
+let generateSkeletionLoader = () => {
     sectionWrapper = createDiv("section-wrapper", false)
     header = createDiv("header", true)
     sectionWrapper.appendChild(header)
-    for (let ind in data) {
-        item = data[ind]
+    for (const x of Array(3).keys()) {
         let card = createDiv('card', false)
         let contentHeader = createDiv("content-header", true)
         let contentSubheader = createDiv("content-subheader", true)
@@ -80,38 +89,31 @@ let generateSkeletionLoader = (data) => {
 }
 
 let removeSkeletonLoader = () => {
-    let mainContent = document.getElementsByClassName("main-content")[0]
-    let placeholder = document.getElementsByClassName("placeholder")[0]
-    mainContent.removeChild(placeholder)
+    document.getElementsByClassName("placeholder")[0].remove()
 }
 
-let getRespFromContent = async (id) => {
-    return new Promise((resolve, reject) => {
-        try {
-            chrome.storage.sync.get((id).toString(), data => {
-                resolve(data[id])
-            }) 
-        } catch (e) {
-            chrome.runtime.onMessage.addListener((request) => {
-                if (request[id] !== undefined) {
-                    resolve(request[id])
-                }
+loadPopup = () => {
+    generateSkeletionLoader()
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        let id = (tabs[0].id).toString()
+        chrome.storage.sync.get(id, stored_doc => {
+            chrome.storage.sync.get("selectedTypes", stored_types => {
+                fetch(url = "https://3638itzwsl.execute-api.us-east-1.amazonaws.com/dev",
+                    {
+                        method: 'POST',
+                        mode: 'cors',
+                        credentials: 'omit',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 'selectedTypes': stored_types.selectedTypes, 'doc': stored_doc[id] })
+                    }).then(resp => resp.json()).then(resp => {
+                        generatePage(resp)
+                        removeSkeletonLoader()
+                    })
             })
-        }
+        })
     })
-}
-
-loadPopup = async () => {
-    let dummyData = await fetch(dummy).then(resp => resp.json())
-    generateSkeletionLoader(dummyData)
-    let tabs = await chrome.tabs.query({ active: true, currentWindow: true })
-    console.log('====== tab id =====')
-    console.log(tabs[0].id)
-    let resp = await getRespFromContent(tabs[0].id)
-    console.log('===== data =====')
-    console.log(resp)
-    removeSkeletonLoader()
-    generatePage(resp)
 }
 
 loadPopup()

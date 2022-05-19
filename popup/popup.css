@@ -65,6 +65,7 @@ div.content-subheader {
     font-size: 14;
     font-weight: normal;
     color: grey;
+    padding-top: 1px;
     align-self: center;
     padding-left: 20px;
 }

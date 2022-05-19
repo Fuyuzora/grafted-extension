@@ -2,6 +2,7 @@ let selectedTypes = ["keywords", "summary", "kg"]
 supportedDomains = [/https:\/\/medium.com\/.+\/.+/, /https:\/\/.+medium.com\/.+/]
 
 chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.sync.clear();
     chrome.storage.sync.set({ selectedTypes })
 })
 
