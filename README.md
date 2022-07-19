@@ -1,6 +1,4 @@
-Grafted is now online! Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/grafted/iopnhejhdaamhojjkpngofhdbphmmobd)
-
-Grafted: Refine your online reading experience with 'grafted' NLP powered brains  
+Grafted: Refine your online reading experience with 'grafted' NLP powered brains. Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/grafted/iopnhejhdaamhojjkpngofhdbphmmobd)
 
 
 v1.0: chrome extension with textrank analysis  
